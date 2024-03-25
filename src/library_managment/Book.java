@@ -3,23 +3,14 @@ package library_managment;
 import java.util.UUID;
 
 public class Book {
-    UUID id;
+    private UUID id;
     String title;
     String author;
 
     public Book(UUID id, String title, String author) {
-        setId(id);
+        this.id = id;
         setTitle(title);
         setAuthor(author);
-    }
-
-
-    public UUID getId() {
-        return id;
-    }
-
-    private void setId(UUID id) {
-        this.id = id;
     }
 
     public String getAuthor() {
