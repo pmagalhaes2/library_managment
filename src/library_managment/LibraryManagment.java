@@ -5,24 +5,20 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class LibraryManagment {
-    static ArrayList<Book> books = new ArrayList<>();
+    ArrayList<Book> books = new ArrayList<>();
+    Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        LibraryManagment libraryManagment = new LibraryManagment();
+        libraryManagment.init();
+    }
+
+    public void init() {
         int option;
-        Scanner sc = new Scanner(System.in);
+        Print printMenu = new Print();
 
         do {
-            System.out.println("+ -------------------------------------+");
-            System.out.println("|    Sistema de Gestão de Biblioteca   |");
-            System.out.println("+ -------------------------------------+");
-            System.out.println("| Opção 1 - Adicionar livro            |");
-            System.out.println("| Opção 2 - Remover livro              |");
-            System.out.println("| Opção 3 - Listar livros cadastrados  |");
-            System.out.println("| Opção 4 - Buscar livro pelo título   |");
-            System.out.println("| Opção 0 - Encerrar programa          |");
-            System.out.println("+ -------------------------------------+");
-
-            System.out.print("Digite aqui sua opção: ");
+            printMenu.printMenu();
 
             try {
                 option = Integer.parseInt(sc.nextLine());
@@ -64,7 +60,7 @@ public class LibraryManagment {
         } while (option != 0);
     }
 
-    public static void addBook(Book book) {
+    public void addBook(Book book) {
         try {
             books.add(book);
             System.out.printf("Livro '%s' adicionado com sucesso!", book.getTitle());
@@ -73,7 +69,7 @@ public class LibraryManagment {
         }
     }
 
-    public static void removeBookByTitle(String bookName) {
+    public void removeBookByTitle(String bookName) {
         try {
             Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
             books.remove(foundedBook);
@@ -83,7 +79,7 @@ public class LibraryManagment {
         }
     }
 
-    public static void getAllBooks() {
+    public void getAllBooks() {
         if (books.isEmpty()) {
             System.out.println("Não existem livros cadastrados!");
         } else {
@@ -94,10 +90,9 @@ public class LibraryManagment {
         }
     }
 
-    public static void getBookByTitle(String bookName) {
+    public void getBookByTitle(String bookName) {
         try {
             Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-
             System.out.printf("Título: %s - Autor: %s", foundedBook.getTitle(), foundedBook.getAuthor());
             System.out.println();
         } catch (Exception e) {
