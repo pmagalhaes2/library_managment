@@ -59,6 +59,12 @@ public class LibraryManagment {
                     Book foundedBook = getBookByTitle(title);
                     lendBook(foundedBook);
                     break;
+                case 6 :
+                    System.out.print("Digite o título do livro: ");
+                    title = sc.nextLine();
+                    foundedBook = getBookByTitle(title);
+                    returnBook(foundedBook);
+                    break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
             }
@@ -110,6 +116,15 @@ public class LibraryManagment {
 
 
     public void lendBook(Book book) {
+        try{
+            book.setAvailable(false);
+            System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+        } catch(Exception e) {
+            System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
+        }
+    }
+
+    public void returnBook(Book book) {
         try{
             book.setAvailable(false);
             System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
