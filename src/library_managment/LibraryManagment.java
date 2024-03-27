@@ -53,6 +53,12 @@ public class LibraryManagment {
                     title = sc.nextLine();
                     getBookByTitle(title);
                     break;
+                case 5:
+                    System.out.print("Digite o título do livro: ");
+                    title = sc.nextLine();
+                    Book foundedBook = getBookByTitle(title);
+                    lendBook(foundedBook);
+                    break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
             }
@@ -63,9 +69,9 @@ public class LibraryManagment {
     public void addBook(Book book) {
         try {
             books.add(book);
-            System.out.printf("Livro '%s' adicionado com sucesso!", book.getTitle());
+            System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
         } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao adicionar o livro: " + e.getMessage());
+            System.out.println("Ocorreu um erro ao adicionar o livro: %n" + e.getMessage());
         }
     }
 
@@ -90,13 +96,26 @@ public class LibraryManagment {
         }
     }
 
-    public void getBookByTitle(String bookName) {
+    public Book getBookByTitle(String bookName) {
         try {
             Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-            System.out.printf("Título: %s - Autor: %s", foundedBook.getTitle(), foundedBook.getAuthor());
-            System.out.println();
+            String available = foundedBook.getAvailable() ? "Disponível" : "Não disponível";
+            System.out.printf("Título: %s - Autor: %s - Status: %s%n", foundedBook.getTitle(), foundedBook.getAuthor(), available);
+            return foundedBook;
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao localizar o livro: " + e.getMessage());
         }
+        return null;
     }
+
+
+    public void lendBook(Book book) {
+        try{
+            book.setAvailable(false);
+            System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+        } catch(Exception e) {
+            System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
+        }
+    }
+
 }

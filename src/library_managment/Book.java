@@ -6,11 +6,13 @@ public class Book {
     private UUID id;
     String title;
     String author;
+    Boolean available = true;
 
     public Book(UUID id, String title, String author) {
         this.id = id;
         setTitle(title);
         setAuthor(author);
+        setAvailable(available);
     }
 
     public String getAuthor() {
@@ -27,5 +29,13 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }
