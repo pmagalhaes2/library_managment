@@ -1,9 +1,9 @@
 package library_managment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
-
 public class LibraryManagment {
     ArrayList<Book> books = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
@@ -59,7 +59,7 @@ public class LibraryManagment {
                     Book foundedBook = getBookByTitle(title);
                     lendBook(foundedBook);
                     break;
-                case 6 :
+                case 6:
                     System.out.print("Digite o título do livro: ");
                     title = sc.nextLine();
                     foundedBook = getBookByTitle(title);
@@ -114,23 +114,21 @@ public class LibraryManagment {
         return null;
     }
 
-
     public void lendBook(Book book) {
-        try{
+        try {
             book.setAvailable(false);
             System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
         }
     }
 
     public void returnBook(Book book) {
-        try{
+        try {
             book.setAvailable(false);
             System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
         }
     }
-
 }
