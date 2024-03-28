@@ -9,8 +9,9 @@ public class Print {
         System.out.println("| Opção 2 - Remover livro              |");
         System.out.println("| Opção 3 - Listar livros cadastrados  |");
         System.out.println("| Opção 4 - Buscar livro pelo título   |");
-        System.out.println("| Opção 5 - Emprestar livro            |");
-        System.out.println("| Opção 6 - Devolver livro             |");
+        System.out.println("| Opção 5 - Buscar livro pelo Autor    |");
+        System.out.println("| Opção 6 - Emprestar livro            |");
+        System.out.println("| Opção 7 - Devolver livro             |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 
