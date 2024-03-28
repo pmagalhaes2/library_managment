@@ -1,11 +1,13 @@
 package library_managment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class LibraryManagment {
-    ArrayList<Book> books = new ArrayList<>();
+    public ArrayList<Book> books = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -49,18 +51,23 @@ public class LibraryManagment {
                     getAllBooks();
                     break;
                 case 4:
-                    System.out.print("Digite o título do livro: ");
+                    System.out.print("Digite o título do livro que deseja encontrar: ");
                     title = sc.nextLine();
                     getBookByTitle(title);
                     break;
                 case 5:
-                    System.out.print("Digite o título do livro: ");
+                    System.out.print("Digite o Autor do livro que deseja encontrar: ");
+                    author = sc.nextLine();
+                    getBookByAuthor(author);
+                    break;
+                case 6:
+                    System.out.print("Digite o título do livro que deseja emprestar: ");
                     title = sc.nextLine();
                     Book foundedBook = getBookByTitle(title);
                     lendBook(foundedBook);
                     break;
-                case 6:
-                    System.out.print("Digite o título do livro: ");
+                case 7:
+                    System.out.print("Digite o título do livro a ser devolvido: ");
                     title = sc.nextLine();
                     foundedBook = getBookByTitle(title);
                     returnBook(foundedBook);
@@ -114,6 +121,22 @@ public class LibraryManagment {
         return null;
     }
 
+    public List<Book> getBookByAuthor(String bookAuthor) {
+        List<Book> authorBooks = books.stream()
+                .filter(book -> book.getAuthor().equals(bookAuthor))
+                .collect(Collectors.toList());
+
+        if (authorBooks.isEmpty()) {
+            System.out.println("Não foram encontrados livros para o autor: " + bookAuthor);
+        } else {
+            System.out.printf("Livros encontrados para o autor %s:%n", bookAuthor);
+            for (Book book : authorBooks) {
+                System.out.printf("Título: %s - Autor: %s%n", book.getTitle(), book.getAuthor());
+            }
+        }
+        return authorBooks;
+    }
+
     public void lendBook(Book book) {
         try {
             if (book.getAvailable()) {
@@ -126,6 +149,7 @@ public class LibraryManagment {
             System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
         }
     }
+
 
     public void returnBook(Book book) {
         try {

@@ -18,3 +18,4 @@ public class Print {
         System.out.print("Digite aqui sua opção: ");
     }
 }
+
