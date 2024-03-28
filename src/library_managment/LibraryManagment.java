@@ -1,9 +1,9 @@
 package library_managment;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+
 public class LibraryManagment {
     ArrayList<Book> books = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
@@ -116,8 +116,12 @@ public class LibraryManagment {
 
     public void lendBook(Book book) {
         try {
-            book.setAvailable(false);
-            System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+            if (book.getAvailable()) {
+                book.setAvailable(false);
+                System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+            } else {
+                System.out.printf("Livro '%s' não está disponível para empréstimo!%n", book.getTitle());
+            }
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
         }
@@ -125,10 +129,14 @@ public class LibraryManagment {
 
     public void returnBook(Book book) {
         try {
-            book.setAvailable(false);
-            System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+            if (!(book.getAvailable())) {
+                book.setAvailable(true);
+                System.out.printf("Livro '%s' devolvido com sucesso!%n", book.getTitle());
+            } else {
+                System.out.printf("Livro '%s' já consta disponível para empréstimo!%n", book.getTitle());
+            }
         } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
+            System.out.println("Ocorreu um erro ao devolver o livro: " + e.getMessage());
         }
     }
 }
