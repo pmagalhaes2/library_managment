@@ -19,6 +19,10 @@ public class LibraryManagment {
         int option;
         Print printMenu = new Print();
 
+        books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
+        books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
+        books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
+
         do {
             printMenu.printMenu();
 
@@ -58,7 +62,7 @@ public class LibraryManagment {
                 case 5:
                     System.out.print("Digite o Autor do livro que deseja encontrar: ");
                     author = sc.nextLine();
-                    getBookByAuthor(author);
+                    getBooksByAuthor(author);
                     break;
                 case 6:
                     System.out.print("Digite o título do livro que deseja emprestar: ");
@@ -80,11 +84,16 @@ public class LibraryManagment {
     }
 
     public void addBook(Book book) {
-        try {
-            books.add(book);
-            System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao adicionar o livro: %n" + e.getMessage());
+        boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
+        if (existingBook) {
+            System.out.printf("Livro '%s' já existe cadastrado na biblioteca.%n", book.getTitle());
+        } else {
+            try {
+                books.add(book);
+                System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao adicionar o livro: %n" + e.getMessage());
+            }
         }
     }
 
@@ -112,7 +121,7 @@ public class LibraryManagment {
     public Book getBookByTitle(String bookName) {
         try {
             Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-            String available = foundedBook.getAvailable() ? "Disponível" : "Não disponível";
+            String available = foundedBook.getAvailable() ? "Disponível" : "Indisponível";
             System.out.printf("Título: %s - Autor: %s - Status: %s%n", foundedBook.getTitle(), foundedBook.getAuthor(), available);
             return foundedBook;
         } catch (Exception e) {
@@ -121,7 +130,7 @@ public class LibraryManagment {
         return null;
     }
 
-    public List<Book> getBookByAuthor(String bookAuthor) {
+    public List<Book> getBooksByAuthor(String bookAuthor) {
         List<Book> authorBooks = books.stream()
                 .filter(book -> book.getAuthor().equals(bookAuthor))
                 .collect(Collectors.toList());
