@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class LibraryManagment {
     public ArrayList<Book> books = new ArrayList<>();
+    public ArrayList<User> users = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -78,6 +79,18 @@ public class LibraryManagment {
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
+                    break;
+                case 8:
+                    System.out.print("Digite o nome do usuário: ");
+                    String userName = sc.nextLine();
+                    System.out.print("Digite o email do usuário: ");
+                    String userEmail = sc.nextLine();
+                    System.out.print("Digite a senha do usuário: ");
+                    String userPassword = sc.nextLine();
+
+                    addUser(new User(userName, userEmail, userPassword));
+                    break;
+
             }
 
         } while (option != 0);
@@ -171,5 +184,21 @@ public class LibraryManagment {
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao devolver o livro: " + e.getMessage());
         }
+
     }
-}
+    public void addUser(User user) {
+        boolean existingUser = users.stream().anyMatch(existing -> existing.getEmail().equals(user.getEmail()));
+        if (existingUser) {
+            System.out.printf("O usuário '%s' já está cadastrado.%n", user.getName());
+        } else {
+            try {
+                users.add(user);
+                System.out.printf("Usuário '%s' cadastrado com sucesso!%n", user.getName());
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao cadastrar o usuário: " + e.getMessage());
+            }
+        }
+    }
+    }
+
+
