@@ -6,11 +6,10 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ALL")
-public class LibraryManagment<ValidationUtil> {
-    public ArrayList<Book> books = new ArrayList<>();
-    public ArrayList<UserProfile> users = new ArrayList<>();
-    public UserProfile currentUserProfile;
+public class LibraryManagment{
+    ArrayList<Book> books = new ArrayList<>();
+    ArrayList<UserProfile> users = new ArrayList<>();
+    UserProfile currentUserProfile;
 
     Scanner sc = new Scanner(System.in);
 
@@ -210,7 +209,7 @@ public class LibraryManagment<ValidationUtil> {
         String userName = sc.nextLine();
 
         String userEmail;
-        library_managment.ValidationUtil validationUtil = new library_managment.ValidationUtil();
+        library_managment.utils.ValidationUtil validationUtil = new library_managment.utils.ValidationUtil();
 
         do {
             System.out.print("Digite o email do usuário: ");
