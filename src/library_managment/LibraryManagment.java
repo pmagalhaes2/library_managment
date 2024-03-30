@@ -1,17 +1,19 @@
 package library_managment;
 
-import library_managment.utils.EmailValidation;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class LibraryManagment{
-    ArrayList<Book> books = new ArrayList<>();
-    ArrayList<UserProfile> users = new ArrayList<>();
-    UserProfile currentUserProfile;
+import static library_managment.UserProfile.ADMIN;
+import static library_managment.UserProfile.STANDARD;
+
+@SuppressWarnings("ALL")
+public class LibraryManagment {
+    public ArrayList<Book> books = new ArrayList<>();
+    public ArrayList<UserProfile> users = new ArrayList<>();
+    public UserProfile currentUserProfile;
 
     Scanner sc = new Scanner(System.in);
 
@@ -21,42 +23,50 @@ public class LibraryManagment{
     }
 
     public void init() {
-        int option;
         Print printUserOptions = new Print();
+        users.add(new UserProfile("admin", "admin@admin.com", "admin123", UserProfile.ADMIN));
 
         books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
         books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
         books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
 
-        do {
+
+        int option = -1;
+
+        while (option != 0) {
             printUserOptions.printUserOptions();
 
             try {
                 option = Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Opção inválida. Tente novamente!");
-                option = -1;
+                continue;
+            }
+
+            if (option == 1 || option == 2) {
+                login();
             }
 
             switch (option) {
                 case 0:
-                    sc.close();
+                    System.out.println("Saindo do programa...");
                     break;
                 case 1:
-                    handleStandardUserMenu();
+                    handleStandardUserMenu(sc);
                     break;
                 case 2:
-                    handleAdminMenu();
+                    handleAdminMenu(sc);
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
                     break;
             }
+        }
 
-        } while (option != 0);
+        sc.close();
     }
 
-    private void handleStandardUserMenu() {
+    private void handleStandardUserMenu(Scanner sc) {
         Print printStandard = new Print();
         int optionStandard;
 
@@ -72,7 +82,6 @@ public class LibraryManagment{
 
             switch (optionStandard) {
                 case 0:
-                    sc.close();
                     break;
                 case 1:
                     System.out.print("Digite o título do livro: ");
@@ -106,7 +115,7 @@ public class LibraryManagment{
         } while (optionStandard != 0);
     }
 
-    private void handleAdminMenu() {
+    private void handleAdminMenu(Scanner sc) {
         Print printAdmin = new Print();
         int optionAdmin;
 
@@ -122,7 +131,6 @@ public class LibraryManagment{
 
             switch (optionAdmin) {
                 case 0:
-                    sc.close();
                     break;
                 case 1:
                     System.out.print("Digite o título do livro: ");
@@ -159,7 +167,7 @@ public class LibraryManagment{
 
                     break;
                 case 7:
-                    if (currentUserProfile == UserProfile.STANDARD) {
+                    if (currentUserProfile == STANDARD) {
                         System.out.print("Digite o título do livro: ");
                         title = sc.nextLine();
                         foundedBook = getBookByTitle(title);
@@ -177,6 +185,8 @@ public class LibraryManagment{
             }
         } while (optionAdmin != 0);
     }
+
+
 
     private void login() {
         System.out.print("Digite o nome de usuário: ");
@@ -211,15 +221,15 @@ public class LibraryManagment{
         String userName = sc.nextLine();
 
         String userEmail;
-        EmailValidation emailValidation = new EmailValidation();
 
         do {
             System.out.print("Digite o email do usuário: ");
             userEmail = sc.nextLine();
-            if (!emailValidation.isValidEmail(userEmail)) {
+            if (userEmail == null || !userEmail.matches("^[\\w.-]+@([\\w-]+\\.)+[\\w]{2,4}$")) {
                 System.out.println("O email inserido é inválido. Por favor, tente novamente.");
             }
-        } while (!emailValidation.isValidEmail(userEmail));
+        } while (userEmail == null || !userEmail.matches("^[\\w.-]+@([\\w-]+\\.)+[\\w]{2,4}$"));
+
 
         String userPassword;
         do {
@@ -229,7 +239,6 @@ public class LibraryManagment{
                 System.out.println("A senha deve ter no mínimo 8 caracteres. Por favor, tente novamente.");
             }
         } while (userPassword.length() < 8);
-
 
         Print printUserOptions = new Print();
         printUserOptions.printUserOptions();
@@ -245,15 +254,17 @@ public class LibraryManagment{
         UserProfile profile;
         switch (profileOption) {
             case 1:
-                profile = UserProfile.ADMIN;
+                profile = ADMIN;
                 break;
             case 2:
             default:
-                profile = UserProfile.STANDARD;
+                profile = STANDARD;
                 break;
         }
         users.add(new UserProfile(userName, userEmail, userPassword, profile));
+        return;
     }
+
 
 
     private void addBook(Book book) {
@@ -335,4 +346,3 @@ public class LibraryManagment{
     }
 
 }
-
