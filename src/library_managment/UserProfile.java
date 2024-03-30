@@ -43,4 +43,5 @@ public class UserProfile {
 
     public Object getEmail() {
         return null;
-    }}
+    }
+}

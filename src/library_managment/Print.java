@@ -28,8 +28,10 @@ public class Print {
         System.out.println("| Opção 8 - Cadastrar usuário          |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
+
         System.out.print("Digite aqui sua opção: ");
     }
+
     public void printStandard() {
         System.out.println("+ -------------------------------------+");
         System.out.println("|            PERFIL DO LEITOR          |");
@@ -37,10 +39,11 @@ public class Print {
         System.out.println("| Opção 1 - Buscar livro pelo título   |");
         System.out.println("| Opção 2 - Buscar livro pelo Autor    |");
         System.out.println("| Opção 3 - Listar livros cadastrados  |");
-        System.out.println("| Opção 4 - Emprestar livro            |");
+        System.out.println("| Opção 4 - Pegar livro emprestado     |");
         System.out.println("| Opção 5 - Devolver livro             |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
+
         System.out.print("Digite aqui sua opção: ");
     }
 }
