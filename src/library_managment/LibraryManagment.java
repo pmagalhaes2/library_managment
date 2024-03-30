@@ -1,5 +1,7 @@
 package library_managment;
 
+import library_managment.utils.EmailValidation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -209,15 +211,15 @@ public class LibraryManagment{
         String userName = sc.nextLine();
 
         String userEmail;
-        library_managment.utils.ValidationUtil validationUtil = new library_managment.utils.ValidationUtil();
+        EmailValidation emailValidation = new EmailValidation();
 
         do {
             System.out.print("Digite o email do usuário: ");
             userEmail = sc.nextLine();
-            if (!validationUtil.isValidEmail(userEmail)) {
+            if (!emailValidation.isValidEmail(userEmail)) {
                 System.out.println("O email inserido é inválido. Por favor, tente novamente.");
             }
-        } while (!validationUtil.isValidEmail(userEmail));
+        } while (!emailValidation.isValidEmail(userEmail));
 
         String userPassword;
         do {
