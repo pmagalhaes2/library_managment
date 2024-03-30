@@ -18,5 +18,17 @@ public class Print {
 
         System.out.print("Digite aqui sua opção: ");
     }
+
+
+    public void printUserOptions() {
+        System.out.println("+ -------------------------------------+");
+        System.out.println("|           Perfil do usuário          |");
+        System.out.println("+ -------------------------------------+");
+        System.out.println("| Opção 1 - Administrador              |");
+        System.out.println("| Opção 2 - Padrão                     |");
+        System.out.println("+ -------------------------------------+");
+
+        System.out.print("Digite aqui sua opção: ");
+    }
 }
 

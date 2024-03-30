@@ -30,7 +30,6 @@ public class UserProfile {
     }
 
     public static void main(String[] args) {
-        // Exemplo de uso:
         UserProfile adminProfile = UserProfile.ADMIN;
         String username = adminProfile.getUsername();
         String password = String.valueOf(adminProfile.getPassword());

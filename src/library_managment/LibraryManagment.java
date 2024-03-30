@@ -5,37 +5,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import library_managment.ValidationUtil;
-
-
-
-
 
 @SuppressWarnings("ALL")
 public class LibraryManagment<ValidationUtil> {
     public ArrayList<Book> books = new ArrayList<>();
     public ArrayList<UserProfile> users = new ArrayList<>();
     public UserProfile currentUserProfile;
-
-
-        public enum UserProfileType {
-            ADMIN,
-            STANDARD,
-            ;
-
-
-            public UserProfile getProfile() {
-                return null;
-            }
-
-            public Object getUsername() {
-                return null;
-            }
-
-            public boolean getPassword() {
-                return false;
-            }
-        }
 
         Scanner sc = new Scanner(System.in);
 
@@ -68,14 +43,22 @@ public class LibraryManagment<ValidationUtil> {
                         break;
                     case 1:
                         if (currentUserProfile == UserProfile.ADMIN) {
-                            addBook();
+                            System.out.print("Digite o título do livro: ");
+                            String title = sc.nextLine();
+                            System.out.print("Digite o autor do livro: ");
+                            String author = sc.nextLine();
+                            UUID id = UUID.randomUUID();
+
+                            addBook(new Book(id, title, author));
                         } else {
                             System.out.println("Opção não disponível para usuários padrão.");
                         }
                         break;
                     case 2:
                         if (currentUserProfile == UserProfile.ADMIN) {
-                            removeBookByTitle();
+                            System.out.print("Digite o título do livro: ");
+                            String title = sc.nextLine();
+                            removeBookByTitle(title);
                         } else {
                             System.out.println("Opção não disponível para usuários padrão.");
                         }
@@ -84,21 +67,31 @@ public class LibraryManagment<ValidationUtil> {
                         getAllBooks();
                         break;
                     case 4:
-                        searchByTitle();
+                        System.out.print("Digite o título do livro: ");
+                        String title = sc.nextLine();
+                        getBookByTitle(title);
                         break;
                     case 5:
-                        searchByAuthor();
+                        System.out.print("Digite o nome do autor: ");
+                        String author = sc.nextLine();
+                        getBooksByAuthor(author);
                         break;
                     case 6:
                         if (currentUserProfile == UserProfile.STANDARD) {
-                            lendBook();
+                            System.out.print("Digite o título do livro: ");
+                            title = sc.nextLine();
+                            Book foundedBook = getBookByTitle(title);
+                            lendBook(foundedBook);
                         } else {
                             System.out.println("Opção não disponível para usuários padrão.");
                         }
                         break;
                     case 7:
                         if (currentUserProfile == UserProfile.STANDARD) {
-                            returnBook();
+                            System.out.print("Digite o título do livro: ");
+                            title = sc.nextLine();
+                            Book foundedBook = getBookByTitle(title);
+                            returnBook(foundedBook);
                         } else {
                             System.out.println("Opção não disponível para usuários padrão.");
                         }
@@ -106,8 +99,6 @@ public class LibraryManagment<ValidationUtil> {
                     case 8:
                         addUser();
                         break;
-
-
                     default:
                         System.out.println("Opção inválida. Tente novamente!");
                         break;
@@ -115,8 +106,6 @@ public class LibraryManagment<ValidationUtil> {
 
             } while (option != 0);
         }
-
-
 
 
     private void login() {
@@ -132,26 +121,9 @@ public class LibraryManagment<ValidationUtil> {
             }
         }
 
-        System.out.println("Usuário ou senha incorretos. Tente novamente.");
+        System.out.println("Usuário e/ou senha incorretos. Tente novamente.");
         login();
     }
-
-
-    private void addBook() {
-            System.out.print("Digite o título do livro: ");
-            String title = sc.nextLine();
-            System.out.print("Digite o autor do livro: ");
-            String author = sc.nextLine();
-            UUID id = UUID.randomUUID();
-
-            addBook(new Book(id, title, author));
-        }
-
-        private void removeBookByTitle() {
-            System.out.print("Digite o título do livro: ");
-            String title = sc.nextLine();
-            removeBookByTitle(title);
-        }
 
         private void getAllBooks() {
             if (books.isEmpty()) {
@@ -162,32 +134,6 @@ public class LibraryManagment<ValidationUtil> {
                     System.out.println(book.getTitle());
                 }
             }
-        }
-
-        private void searchByTitle() {
-            System.out.print("Digite o título do livro que deseja encontrar: ");
-            String title = sc.nextLine();
-            getBookByTitle(title);
-        }
-
-        private void searchByAuthor() {
-            System.out.print("Digite o Autor do livro que deseja encontrar: ");
-            String author = sc.nextLine();
-            getBooksByAuthor(author);
-        }
-
-        private void lendBook() {
-            System.out.print("Digite o título do livro que deseja emprestar: ");
-            String title = sc.nextLine();
-            Book foundedBook = getBookByTitle(title);
-            lendBook(foundedBook);
-        }
-
-        private void returnBook() {
-            System.out.print("Digite o título do livro a ser devolvido: ");
-            String title = sc.nextLine();
-            Book foundedBook = getBookByTitle(title);
-            returnBook(foundedBook);
         }
 
     private void addUser() {
@@ -204,8 +150,6 @@ public class LibraryManagment<ValidationUtil> {
             }
         } while (!validationUtil.isValidEmail(userEmail));
 
-
-
         String userPassword;
         do {
             System.out.print("Digite a senha do usuário (mínimo de 8 caracteres): ");
@@ -215,9 +159,10 @@ public class LibraryManagment<ValidationUtil> {
             }
         } while (userPassword.length() < 8);
 
-        System.out.println("Escolha o perfil do usuário:");
-        System.out.println("1. ADMIN");
-        System.out.println("2. STANDARD");
+
+        Print printUserOptions = new Print();
+        printUserOptions.printUserOptions();
+
         int profileOption;
         try {
             profileOption = Integer.parseInt(sc.nextLine());
@@ -238,7 +183,6 @@ public class LibraryManagment<ValidationUtil> {
         }
         users.add(new UserProfile(userName, userEmail, userPassword, profile));
     }
-
 
 
     private void addBook(Book book) {
@@ -277,15 +221,15 @@ public class LibraryManagment<ValidationUtil> {
             return null;
         }
 
-        private List<Book> getBooksByAuthor(String bookAuthor) {
+        private List<Book> getBooksByAuthor(String author) {
             List<Book> authorBooks = books.stream()
-                    .filter(book -> book.getAuthor().equals(bookAuthor))
+                    .filter(book -> book.getAuthor().equals(author))
                     .collect(Collectors.toList());
 
             if (authorBooks.isEmpty()) {
-                System.out.println("Não foram encontrados livros para o autor: " + bookAuthor);
+                System.out.println("Não foram encontrados livros para o autor: " + author);
             } else {
-                System.out.printf("Livros encontrados para o autor %s:%n", bookAuthor);
+                System.out.printf("Livros encontrados para o autor %s:%n", author);
                 for (Book book : authorBooks) {
                     System.out.printf("Título: %s - Autor: %s%n", book.getTitle(), book.getAuthor());
                 }
