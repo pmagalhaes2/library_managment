@@ -19,94 +19,180 @@ public class LibraryManagment<ValidationUtil> {
             libraryManagment.init();
         }
 
-        public void init() {
-            int option;
-            Print printMenu = new Print();
+    public void init() {
+        int option;
+        Print printUserOptions = new Print();
 
-            books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
-            books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
-            books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
+        books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
+        books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
+        books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
 
-            do {
-                printMenu.printMenu();
+        do {
+            printUserOptions.printUserOptions();
 
-                try {
-                    option = Integer.parseInt(sc.nextLine());
-                } catch (NumberFormatException e) {
+            try {
+                option = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opção inválida. Tente novamente!");
+                option = -1;
+            }
+
+            switch (option) {
+                case 0:
+                    sc.close();
+                    break;
+                case 1:
+                    handleStandardUserMenu();
+                    break;
+                case 2:
+                    handleAdminMenu();
+                    break;
+                default:
                     System.out.println("Opção inválida. Tente novamente!");
-                    option = -1;
-                }
+                    break;
+            }
 
-                switch (option) {
-                    case 0:
-                        sc.close();
-                        break;
-                    case 1:
-                        if (currentUserProfile == UserProfile.ADMIN) {
-                            System.out.print("Digite o título do livro: ");
-                            String title = sc.nextLine();
-                            System.out.print("Digite o autor do livro: ");
-                            String author = sc.nextLine();
-                            UUID id = UUID.randomUUID();
+        } while (option != 0);
+    }
 
-                            addBook(new Book(id, title, author));
-                        } else {
-                            System.out.println("Opção não disponível para usuários padrão.");
-                        }
-                        break;
-                    case 2:
-                        if (currentUserProfile == UserProfile.ADMIN) {
-                            System.out.print("Digite o título do livro: ");
-                            String title = sc.nextLine();
-                            removeBookByTitle(title);
-                        } else {
-                            System.out.println("Opção não disponível para usuários padrão.");
-                        }
-                        break;
-                    case 3:
-                        getAllBooks();
-                        break;
-                    case 4:
+    private void handleStandardUserMenu() {
+        Print printStandard = new Print();
+        int optionStandard;
+        do {
+            printStandard.printStandard();
+
+            try {
+                optionStandard = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opção inválida. Tente novamente!");
+                optionStandard = -1;
+            }
+
+            switch (optionStandard) {
+                case 0:
+                    sc.close();
+                    break;
+                case 1:
+                    System.out.print("Digite o título do livro: ");
+                    String title = sc.nextLine();
+                    getBookByTitle(title);
+                    break;
+                case 2:
+                    System.out.print("Digite o nome do autor: ");
+                    String author = sc.nextLine();
+                    getBooksByAuthor(author);
+                    break;
+                case 3:
+                    getAllBooks();
+                    break;
+                case 4:
+                    if (currentUserProfile == UserProfile.STANDARD) {
+                        System.out.print("Digite o título do livro: ");
+                        title = sc.nextLine();
+                        Book foundedBook = getBookByTitle(title);
+                        lendBook(foundedBook);
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                case 5:
+                    if (currentUserProfile == UserProfile.STANDARD) {
+                        System.out.print("Digite o título do livro: ");
+                        title = sc.nextLine();
+                        Book foundedBook = getBookByTitle(title);
+                        returnBook(foundedBook);
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente!");
+                    break;
+            }
+        } while (optionStandard != 0);
+    }
+
+    private void handleAdminMenu() {
+        Print printAdmin = new Print();
+        int optionAdmin;
+        do {
+            printAdmin.printAdmin();
+
+            try {
+                optionAdmin = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opção inválida. Tente novamente!");
+                optionAdmin = -1;
+            }
+
+            switch (optionAdmin) {
+                case 0:
+                    sc.close();
+                    break;
+                case 1:
+                    if (currentUserProfile == UserProfile.ADMIN) {
                         System.out.print("Digite o título do livro: ");
                         String title = sc.nextLine();
-                        getBookByTitle(title);
-                        break;
-                    case 5:
-                        System.out.print("Digite o nome do autor: ");
+                        System.out.print("Digite o autor do livro: ");
                         String author = sc.nextLine();
-                        getBooksByAuthor(author);
-                        break;
-                    case 6:
-                        if (currentUserProfile == UserProfile.STANDARD) {
-                            System.out.print("Digite o título do livro: ");
-                            title = sc.nextLine();
-                            Book foundedBook = getBookByTitle(title);
-                            lendBook(foundedBook);
-                        } else {
-                            System.out.println("Opção não disponível para usuários padrão.");
-                        }
-                        break;
-                    case 7:
-                        if (currentUserProfile == UserProfile.STANDARD) {
-                            System.out.print("Digite o título do livro: ");
-                            title = sc.nextLine();
-                            Book foundedBook = getBookByTitle(title);
-                            returnBook(foundedBook);
-                        } else {
-                            System.out.println("Opção não disponível para usuários padrão.");
-                        }
-                        break;
-                    case 8:
-                        addUser();
-                        break;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente!");
-                        break;
-                }
+                        UUID id = UUID.randomUUID();
 
-            } while (option != 0);
-        }
-
+                        addBook(new Book(id, title, author));
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                case 2:
+                    if (currentUserProfile == UserProfile.ADMIN) {
+                        System.out.print("Digite o título do livro: ");
+                        String title = sc.nextLine();
+                        removeBookByTitle(title);
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                case 3:
+                    getAllBooks();
+                    break;
+                case 4:
+                    System.out.print("Digite o título do livro: ");
+                    String title = sc.nextLine();
+                    getBookByTitle(title);
+                    break;
+                case 5:
+                    System.out.print("Digite o nome do autor: ");
+                    String author = sc.nextLine();
+                    getBooksByAuthor(author);
+                    break;
+                case 6:
+                    if (currentUserProfile == UserProfile.STANDARD) {
+                        System.out.print("Digite o título do livro: ");
+                        title = sc.nextLine();
+                        Book foundedBook = getBookByTitle(title);
+                        lendBook(foundedBook);
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                case 7:
+                    if (currentUserProfile == UserProfile.STANDARD) {
+                        System.out.print("Digite o título do livro: ");
+                        title = sc.nextLine();
+                        Book foundedBook = getBookByTitle(title);
+                        returnBook(foundedBook);
+                    } else {
+                        System.out.println("Opção não disponível para usuários padrão.");
+                    }
+                    break;
+                case 8:
+                    addUser();
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente!");
+                    break;
+            }
+        } while (optionAdmin != 0);
+    }
 
     private void login() {
         System.out.print("Digite o nome de usuário: ");
