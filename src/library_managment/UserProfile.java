@@ -20,7 +20,6 @@ public class UserProfile {
         this.userType = userType;
     }
 
-    // getters and setters
 
     public String getPassword() {
         return password;
