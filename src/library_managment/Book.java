@@ -1,12 +1,11 @@
 package library_managment;
-
 import java.util.UUID;
 
 public class Book {
     private UUID id;
-    String title;
-    String author;
-    Boolean available = true;
+    private String title;
+    private String author;
+    private boolean available = true;
 
     public Book(UUID id, String title, String author) {
         this.id = id;
@@ -39,4 +38,8 @@ public class Book {
         this.available = available;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s", id.toString(), title, author, available);
+    }
 }

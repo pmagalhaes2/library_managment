@@ -1,0 +1,4 @@
+12fa8dbd-fbe4-4aa1-b628-080b3d4dd030,Vidas Secas,Graciliano Ramos,true
+a5af0523-db9f-4d35-bcd8-e710e7c4db72,Dom Casmurro,Graciliano Ramos,true
+c53a55b5-d024-490e-a302-b041ea52a84f,Dom Quixote,Miguel de Cervantes,true
+14f03e64-4b43-4f69-8275-98b2939d5b5c,É assim que acaba,Collen Hover,true

@@ -1,5 +1,8 @@
 package library_managment;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +17,7 @@ public class LibraryManagment {
     public ArrayList<Book> books = new ArrayList<>();
     public ArrayList<UserProfile> users = new ArrayList<>();
     public UserProfile currentUserProfile;
-
+    public FileWriter writer;
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -30,6 +33,15 @@ public class LibraryManagment {
         books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
         books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
 
+        try {
+            writer = new FileWriter("books.txt");
+            for (Book book : books) {
+                writer.write(book.toString() + System.lineSeparator());
+            }
+            writer.flush();
+        } catch (IOException e) {
+            System.err.println("Erro ao criar o arquivo books.txt: " + e.getMessage());
+        }
 
         int option = -1;
 
@@ -64,6 +76,17 @@ public class LibraryManagment {
         }
 
         sc.close();
+        closeWriter();
+    }
+
+    private void closeWriter() {
+        try {
+            if (writer != null) {
+                writer.close();
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao fechar o FileWriter: " + e.getMessage());
+        }
     }
 
     private void handleStandardUserMenu(Scanner sc) {
@@ -186,8 +209,6 @@ public class LibraryManagment {
         } while (optionAdmin != 0);
     }
 
-
-
     private void login() {
         System.out.print("Digite o nome de usuário: ");
         String username = sc.nextLine();
@@ -266,7 +287,6 @@ public class LibraryManagment {
     }
 
 
-
     private void addBook(Book book) {
         boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
         if (existingBook) {
@@ -274,12 +294,16 @@ public class LibraryManagment {
         } else {
             try {
                 books.add(book);
+                writer.write(book.toString() + System.lineSeparator());
+                writer.flush();
                 System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
-            } catch (Exception e) {
-                System.out.println("Ocorreu um erro ao adicionar o livro: %n" + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Ocorreu um erro ao adicionar o livro no arquivo: " + e.getMessage());
             }
         }
     }
+
+
 
     private void removeBookByTitle(String bookName) {
         try {
