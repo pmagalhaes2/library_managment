@@ -56,19 +56,19 @@ public class LibraryManagment {
                 continue;
             }
 
-            if (option == 1 || option == 2) {
-                login();
-            }
-
             switch (option) {
                 case 0:
                     System.out.println("Saindo do programa...");
                     break;
                 case 1:
-                    handleStandardUserMenu(sc);
+                    Boolean existingUser = login();
+                    if (existingUser) handleStandardUserMenu(sc);
+                    option = 0;
                     break;
                 case 2:
-                    handleAdminMenu(sc);
+                    existingUser = login();
+                    if (existingUser) handleAdminMenu(sc);
+                    option = 0;
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
@@ -190,7 +190,6 @@ public class LibraryManagment {
                     title = sc.nextLine();
                     Book foundedBook = getBookByTitle(title);
                     lendBook(foundedBook);
-
                     break;
                 case 7:
                     if (currentUserProfile == STANDARD) {
@@ -212,21 +211,34 @@ public class LibraryManagment {
         } while (optionAdmin != 0);
     }
 
-    private void login() {
-        System.out.print("Digite o nome de usuário: ");
-        String username = sc.nextLine();
-        System.out.print("Digite a senha: ");
-        String password = sc.nextLine();
+    private Boolean login() {
+        int attempts = 0;
+        final int MAX_ATTEMPTS = 3;
 
-        for (UserProfile user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                currentUserProfile = user.getProfile();
-                return;
+        do {
+            System.out.print("Digite o nome de usuário: ");
+            String username = sc.nextLine();
+            System.out.print("Digite a senha: ");
+            String password = sc.nextLine();
+
+            UserProfile existingUser = users.stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).findFirst().orElse(null);
+
+            if(existingUser != null) {
+                currentUserProfile = existingUser.getProfile();
+                return true;
             }
-        }
 
-        System.out.println("Usuário e/ou senha incorretos. Tente novamente.");
-        login();
+            attempts++;
+
+            if(MAX_ATTEMPTS - attempts > 0) {
+                System.out.printf("Usuário e/ou senha incorretos. Você possui %d tentativas!%n", MAX_ATTEMPTS - attempts);
+            }
+
+        } while (attempts < MAX_ATTEMPTS);
+
+        sc.close();
+        System.out.println("Quantidade de tentativas excedidas. O login não foi bem sucedido!");
+        return false;
     }
 
     private void getAllBooks() {
