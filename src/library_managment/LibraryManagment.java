@@ -1,5 +1,7 @@
 package library_managment;
 
+import library_managment.utils.EmailValidation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,11 +11,10 @@ import java.util.stream.Collectors;
 import static library_managment.UserProfile.ADMIN;
 import static library_managment.UserProfile.STANDARD;
 
-@SuppressWarnings("ALL")
 public class LibraryManagment {
-    public ArrayList<Book> books = new ArrayList<>();
-    public ArrayList<UserProfile> users = new ArrayList<>();
-    public UserProfile currentUserProfile;
+    ArrayList<Book> books = new ArrayList<>();
+    ArrayList<UserProfile> users = new ArrayList<>();
+    UserProfile currentUserProfile;
 
     Scanner sc = new Scanner(System.in);
 
@@ -82,6 +83,7 @@ public class LibraryManagment {
 
             switch (optionStandard) {
                 case 0:
+                    System.out.println("Saindo do programa...");
                     break;
                 case 1:
                     System.out.print("Digite o título do livro: ");
@@ -131,6 +133,7 @@ public class LibraryManagment {
 
             switch (optionAdmin) {
                 case 0:
+                    System.out.println("Saindo do programa...");
                     break;
                 case 1:
                     System.out.print("Digite o título do livro: ");
@@ -220,15 +223,17 @@ public class LibraryManagment {
         System.out.print("Digite o nome do usuário: ");
         String userName = sc.nextLine();
 
+        EmailValidation emailValidation = new EmailValidation();
+
         String userEmail;
 
         do {
             System.out.print("Digite o email do usuário: ");
             userEmail = sc.nextLine();
-            if (userEmail == null || !userEmail.matches("^[\\w.-]+@([\\w-]+\\.)+[\\w]{2,4}$")) {
+            if (userEmail == null || !EmailValidation.isValidEmail(userEmail)) {
                 System.out.println("O email inserido é inválido. Por favor, tente novamente.");
             }
-        } while (userEmail == null || !userEmail.matches("^[\\w.-]+@([\\w-]+\\.)+[\\w]{2,4}$"));
+        } while (userEmail == null || !EmailValidation.isValidEmail(userEmail));
 
 
         String userPassword;
