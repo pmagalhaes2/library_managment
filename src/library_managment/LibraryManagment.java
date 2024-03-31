@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
 import static library_managment.UserProfile.ADMIN;
 import static library_managment.UserProfile.STANDARD;
 
+//Library Management Program. This program offers functionalities for business administration and client management. It allows administrators to add, remove, and update books in the library, as well as manage user accounts. Standard users can search for books by title or author, borrow available books, and return borrowed books. Administrators have additional functionalities such as adding users, managing books, and lending books on behalf of standard users.
+//@authors Katherine Uchoas Rodrigues, Maria Cristina Leal Geardini, Patricia Magalhães, Sophia Contesini, Thamires Candida Barbosa
+//@version 1.0
+
 public class LibraryManagment {
     public ArrayList<Book> books = new ArrayList<>();
     public ArrayList<UserProfile> users = new ArrayList<>();

@@ -1,3 +1,3 @@
-3013cc1e-e12f-40ba-b37a-9d42371839cd,Vidas Secas,Graciliano Ramos,true
-3c6a1310-1808-4908-9f2f-df727cc732b8,Dom Casmurro,Graciliano Ramos,true
-6aee1a44-7161-4bcd-a7cc-36c0ad153949,Dom Quixote,Miguel de Cervantes,true
+ef6a33f7-7d20-4b2d-b239-1ec79b1f2cdd,Vidas Secas,Graciliano Ramos,true
+76138fda-cce4-43ce-9523-dd4a6abe2484,Dom Casmurro,Graciliano Ramos,true
+9e54d4b4-c9e6-48d0-99d4-5e0d8ebeb302,Dom Quixote,Miguel de Cervantes,true
