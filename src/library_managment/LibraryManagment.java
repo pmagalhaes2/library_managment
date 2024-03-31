@@ -19,11 +19,6 @@ public class LibraryManagment {
     public UserProfile currentUserProfile;
     public FileWriter writer;
 
-    ArrayList<Book> books = new ArrayList<>();
-    ArrayList<UserProfile> users = new ArrayList<>();
-    UserProfile currentUserProfile;
-
-
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -296,7 +291,6 @@ public class LibraryManagment {
         return;
     }
 
-
     private void addBook(Book book) {
         boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
         if (existingBook) {
@@ -313,15 +307,31 @@ public class LibraryManagment {
         }
     }
 
-
-
     private void removeBookByTitle(String bookName) {
         try {
-            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-            books.remove(foundedBook);
-            System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().orElse(null);
+            if (foundedBook != null) {
+                books.remove(foundedBook);
+                updateBooksFile();
+                System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+            } else {
+                System.out.println("Livro não encontrado na biblioteca.");
+            }
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao remover o livro: " + e.getMessage());
+        }
+    }
+
+    private void updateBooksFile() {
+        try {
+            writer = new FileWriter("books.txt");
+            for (Book book : books) {
+                writer.write(book.toString() + System.lineSeparator());
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
         }
     }
 
