@@ -2,10 +2,12 @@ package library_managment;
 
 import java.io.FileWriter;
 import java.io.IOException;
+
 import library_managment.utils.EmailValidation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -18,10 +20,6 @@ public class LibraryManagment {
     public ArrayList<UserProfile> users = new ArrayList<>();
     public UserProfile currentUserProfile;
     public FileWriter writer;
-
-    ArrayList<Book> books = new ArrayList<>();
-    ArrayList<UserProfile> users = new ArrayList<>();
-    UserProfile currentUserProfile;
 
 
     Scanner sc = new Scanner(System.in);
@@ -61,19 +59,19 @@ public class LibraryManagment {
                 continue;
             }
 
-            if (option == 1 || option == 2) {
-                login();
-            }
-
             switch (option) {
                 case 0:
                     System.out.println("Saindo do programa...");
                     break;
                 case 1:
-                    handleStandardUserMenu(sc);
+                    Boolean registeredUser = login();
+                    if (registeredUser) handleStandardUserMenu(sc);
+                    option = 0;
                     break;
                 case 2:
-                    handleAdminMenu(sc);
+                    registeredUser = login();
+                    if (registeredUser) handleAdminMenu(sc);
+                    option = 0;
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
@@ -217,21 +215,32 @@ public class LibraryManagment {
         } while (optionAdmin != 0);
     }
 
-    private void login() {
-        System.out.print("Digite o nome de usuário: ");
-        String username = sc.nextLine();
-        System.out.print("Digite a senha: ");
-        String password = sc.nextLine();
+    private boolean login() {
+        int attempts = 0;
+        final int MAX_ATTEMPTS = 3;
 
-        for (UserProfile user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                currentUserProfile = user.getProfile();
-                return;
+        do {
+            System.out.print("Digite o nome de usuário: ");
+            String username = sc.nextLine();
+            System.out.print("Digite a senha: ");
+            String password = sc.nextLine();
+
+            Optional<UserProfile> existingUser = users.stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).findFirst();
+
+            if (existingUser.isPresent()) {
+                currentUserProfile = existingUser.get().getProfile();
+                return true;
             }
-        }
+            attempts++;
 
-        System.out.println("Usuário e/ou senha incorretos. Tente novamente.");
-        login();
+            if ((MAX_ATTEMPTS - attempts > 0)) {
+                System.out.printf("Usuário e/ou senha incorretos. Restam %d tentativa(s) de login.%n", MAX_ATTEMPTS - attempts);
+            }
+        } while (attempts < MAX_ATTEMPTS);
+
+        System.out.println("Quantidade máxima de tentativas excedida. O login não foi bem-sucedido!");
+        sc.close();
+        return false;
     }
 
     private void getAllBooks() {
@@ -248,8 +257,6 @@ public class LibraryManagment {
     private void addUser() {
         System.out.print("Digite o nome do usuário: ");
         String userName = sc.nextLine();
-
-        EmailValidation emailValidation = new EmailValidation();
 
         String userEmail;
 
@@ -312,7 +319,6 @@ public class LibraryManagment {
             }
         }
     }
-
 
 
     private void removeBookByTitle(String bookName) {
