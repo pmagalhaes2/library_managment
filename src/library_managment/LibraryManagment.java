@@ -2,12 +2,10 @@ package library_managment;
 
 import java.io.FileWriter;
 import java.io.IOException;
-
 import library_managment.utils.EmailValidation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,7 +18,6 @@ public class LibraryManagment {
     public ArrayList<UserProfile> users = new ArrayList<>();
     public UserProfile currentUserProfile;
     public FileWriter writer;
-
 
     Scanner sc = new Scanner(System.in);
 
@@ -59,19 +56,19 @@ public class LibraryManagment {
                 continue;
             }
 
+            if (option == 1 || option == 2) {
+                login();
+            }
+
             switch (option) {
                 case 0:
                     System.out.println("Saindo do programa...");
                     break;
                 case 1:
-                    Boolean registeredUser = login();
-                    if (registeredUser) handleStandardUserMenu(sc);
-                    option = 0;
+                    handleStandardUserMenu(sc);
                     break;
                 case 2:
-                    registeredUser = login();
-                    if (registeredUser) handleAdminMenu(sc);
-                    option = 0;
+                    handleAdminMenu(sc);
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
@@ -215,32 +212,21 @@ public class LibraryManagment {
         } while (optionAdmin != 0);
     }
 
-    private boolean login() {
-        int attempts = 0;
-        final int MAX_ATTEMPTS = 3;
+    private void login() {
+        System.out.print("Digite o nome de usuário: ");
+        String username = sc.nextLine();
+        System.out.print("Digite a senha: ");
+        String password = sc.nextLine();
 
-        do {
-            System.out.print("Digite o nome de usuário: ");
-            String username = sc.nextLine();
-            System.out.print("Digite a senha: ");
-            String password = sc.nextLine();
-
-            Optional<UserProfile> existingUser = users.stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).findFirst();
-
-            if (existingUser.isPresent()) {
-                currentUserProfile = existingUser.get().getProfile();
-                return true;
+        for (UserProfile user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                currentUserProfile = user.getProfile();
+                return;
             }
-            attempts++;
+        }
 
-            if ((MAX_ATTEMPTS - attempts > 0)) {
-                System.out.printf("Usuário e/ou senha incorretos. Restam %d tentativa(s) de login.%n", MAX_ATTEMPTS - attempts);
-            }
-        } while (attempts < MAX_ATTEMPTS);
-
-        System.out.println("Quantidade máxima de tentativas excedida. O login não foi bem-sucedido!");
-        sc.close();
-        return false;
+        System.out.println("Usuário e/ou senha incorretos. Tente novamente.");
+        login();
     }
 
     private void getAllBooks() {
@@ -257,6 +243,8 @@ public class LibraryManagment {
     private void addUser() {
         System.out.print("Digite o nome do usuário: ");
         String userName = sc.nextLine();
+
+        EmailValidation emailValidation = new EmailValidation();
 
         String userEmail;
 
@@ -303,7 +291,6 @@ public class LibraryManagment {
         return;
     }
 
-
     private void addBook(Book book) {
         boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
         if (existingBook) {
@@ -320,14 +307,31 @@ public class LibraryManagment {
         }
     }
 
-
     private void removeBookByTitle(String bookName) {
         try {
-            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-            books.remove(foundedBook);
-            System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().orElse(null);
+            if (foundedBook != null) {
+                books.remove(foundedBook);
+                updateBooksFile();
+                System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+            } else {
+                System.out.println("Livro não encontrado na biblioteca.");
+            }
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao remover o livro: " + e.getMessage());
+        }
+    }
+
+    private void updateBooksFile() {
+        try {
+            writer = new FileWriter("books.txt");
+            for (Book book : books) {
+                writer.write(book.toString() + System.lineSeparator());
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
         }
     }
 
