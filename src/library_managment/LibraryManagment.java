@@ -2,8 +2,6 @@ package library_managment;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import library_managment.utils.EmailValidation;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -256,18 +254,26 @@ public class LibraryManagment {
         System.out.print("Digite o nome do usuário: ");
         String userName = sc.nextLine();
 
-        EmailValidation emailValidation = new EmailValidation();
-
         String userEmail;
 
         do {
             System.out.print("Digite o email do usuário: ");
             userEmail = sc.nextLine();
-            if (userEmail == null || !EmailValidation.isValidEmail(userEmail)) {
-                System.out.println("O email inserido é inválido. Por favor, tente novamente.");
-            }
-        } while (userEmail == null || !EmailValidation.isValidEmail(userEmail));
 
+            boolean emailExists = false;
+            for (UserProfile user : users) {
+                if (user.getEmail().equals(userEmail)) {
+                    emailExists = true;
+                    break;
+                }
+            }
+
+            if (emailExists) {
+                System.out.println("Este email já está sendo usado. Por favor, insira um email diferente.");
+                userEmail = null;
+            }
+
+        } while (userEmail == null);
 
         String userPassword;
         do {
