@@ -2,16 +2,16 @@ package library_managment;
 
 public class Print {
 
-    public void printUserOptions() {
+    public void printLoginOptions() {
         System.out.println("+ -------------------------------------+");
-        System.out.println("|           PERFIL DO USUÁRIO          |");
+        System.out.println("|               BIBLIOTECA             |");
         System.out.println("+ -------------------------------------+");
-        System.out.println("| Opção 1 - Leitor                     |");
-        System.out.println("| Opção 2 - Bibliotecário              |");
+        System.out.println("| Opção 1 - Cadastro                   |");
+        System.out.println("| Opção 2 - Login                      |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 
-        System.out.print("Digite aqui sua opção: ");
+        System.out.print("Insira aqui sua opção: ");
     }
 
     public void printAdmin() {
@@ -30,7 +30,7 @@ public class Print {
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 
-        System.out.print("Digite aqui sua opção: ");
+        System.out.print("Insira aqui sua opção: ");
     }
 
     public void printStandard() {
@@ -45,7 +45,7 @@ public class Print {
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 
-        System.out.print("Digite aqui sua opção: ");
+        System.out.print("Insira aqui sua opção: ");
     }
 }
 
