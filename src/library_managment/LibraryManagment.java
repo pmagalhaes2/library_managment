@@ -253,7 +253,6 @@ public class LibraryManagment {
     }
 
     private boolean isValidEmail(String email) {
-        // Verifica se o email contém um "@" e pelo menos um "." depois do "@"
         return email.contains("@") && email.indexOf(".") > email.indexOf("@");
     }
 
@@ -290,7 +289,7 @@ public class LibraryManagment {
 
             if (!isValidEmail(userEmail)) {
                 System.out.println("Email inválido. Por favor, insira um email válido.");
-                userEmail = null; // Redefine o userEmail para forçar a repetição do loop
+                userEmail = null;
             }
 
             boolean emailExists = false;
