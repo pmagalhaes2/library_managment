@@ -244,7 +244,7 @@ public class LibraryManagment {
             attempts++;
 
             if (MAX_ATTEMPTS - attempts > 0) {
-                System.out.printf("Parâmetros de login inconsistentes com nossa base de dados. Tente novamente. Você tem mais %d tentativas!%n", MAX_ATTEMPTS - attempts);
+                System.out.printf("Usuário e/ou senha incorretos. Você possui %d tentativas!%n", MAX_ATTEMPTS - attempts);
                 break;
             }
 
