@@ -1,5 +1,8 @@
 package library_managment;
 
+import library_managment.utils.EmailValidation;
+import library_managment.utils.PasswordValidation;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -252,31 +255,6 @@ public class LibraryManagment {
         return false;
     }
 
-    private boolean isValidEmail(String email) {
-        return email.contains("@") && email.indexOf(".") > email.indexOf("@");
-    }
-
-    private boolean isValidPassword(String password) {
-        boolean hasUpperCase = false;
-        boolean hasLowerCase = false;
-        boolean hasDigit = false;
-        boolean hasSpecialChar = false;
-
-        for (char ch : password.toCharArray()) {
-            if (Character.isUpperCase(ch)) {
-                hasUpperCase = true;
-            } else if (Character.isLowerCase(ch)) {
-                hasLowerCase = true;
-            } else if (Character.isDigit(ch)) {
-                hasDigit = true;
-            } else if ("@#$%^&+=.".indexOf(ch) != -1) {
-                hasSpecialChar = true;
-            }
-        }
-
-        return password.length() >= 8 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
-    }
-
     private void addUser() {
         System.out.print("Insira o nome do usuário: ");
         String userName = sc.nextLine();
@@ -287,7 +265,7 @@ public class LibraryManagment {
             System.out.print("Insira o email do usuário: ");
             userEmail = sc.nextLine();
 
-            if (!isValidEmail(userEmail)) {
+            if (!EmailValidation.isValidEmail(userEmail)) {
                 System.out.println("Email inválido. Por favor, insira um email válido.");
                 userEmail = null;
             }
@@ -299,7 +277,6 @@ public class LibraryManagment {
                     break;
                 }
             }
-
             if (emailExists) {
                 System.out.println("Este email já está sendo usado. Por favor, insira um email diferente.");
                 userEmail = null;
@@ -309,12 +286,16 @@ public class LibraryManagment {
 
         String userPassword;
         do {
-            System.out.print("A senha deve conter pelo menos 1 letra maiúscula, 1 letra minúscula, 1 caractere especial e ter no mínimo 8 caracteres: ");
+            System.out.print("IA senha deve conter pelo menos 1 letra maiúscula, 1 letra minúscula, 1 caractere especial e ter no mínimo 8 caracteres:   ");
             userPassword = sc.nextLine();
-            if (!isValidPassword(userPassword)) {
+
+            if (!PasswordValidation.isValidPassword(userPassword)) {
                 System.out.println("A senha não atende aos critérios mínimos de segurança.");
             }
-        } while (!isValidPassword(userPassword));
+        } while (!PasswordValidation.isValidPassword(userPassword));
+
+
+
 
         UserProfile.UserType profile;
         int profileOption;
