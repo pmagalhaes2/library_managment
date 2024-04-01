@@ -26,6 +26,7 @@ public class Print {
         System.out.println("| Opção 6 - Emprestar livro            |");
         System.out.println("| Opção 7 - Devolver livro             |");
         System.out.println("| Opção 8 - Cadastrar usuário          |");
+        System.out.println("| Opção 9 - Retornar ao menu principal |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 

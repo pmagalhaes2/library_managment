@@ -8,9 +8,6 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static library_managment.UserProfile.ADMIN;
-import static library_managment.UserProfile.STANDARD;
-
 //Library Management Program. This program offers functionalities for business administration and client management. It allows administrators to add, remove, and update books in the library, as well as manage user accounts. Standard users can search for books by title or author, borrow available books, and return borrowed books. Administrators have additional functionalities such as adding users, managing books, and lending books on behalf of standard users.
 //@authors Katherine Uchoas Rodrigues, Maria Cristina Leal Geardini, Patricia Magalhães, Sophia Contesini, Thamires Candida Barbosa
 //@version 1.0
@@ -27,13 +24,13 @@ public class LibraryManagment {
         LibraryManagment libraryManagment = new LibraryManagment();
         libraryManagment.init();
     }
-
     public void init() {
         Print printUserOptions = new Print();
         users.add(new UserProfile("admin", "admin@admin.com", "admin123", UserProfile.ADMIN));
+        users.add(new UserProfile("katherine", "katherine@email.com", "12345678", UserProfile.STANDARD));
 
         books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
-        books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Graciliano Ramos"));
+        books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Machado de Assis"));
         books.add(new Book(UUID.randomUUID(), "Dom Quixote", "Miguel de Cervantes"));
 
         try {
@@ -63,13 +60,17 @@ public class LibraryManagment {
                     System.out.println("Saindo do programa...");
                     break;
                 case 1:
-                    Boolean existingUser = login();
-                    if (existingUser) handleStandardUserMenu(sc);
+                    currentUserProfile = UserProfile.STANDARD;
+                    if (login()) {
+                        handleStandardUserMenu(sc);
+                    }
                     option = 0;
                     break;
                 case 2:
-                    existingUser = login();
-                    if (existingUser) handleAdminMenu(sc);
+                    currentUserProfile = UserProfile.ADMIN;
+                    if (login()) {
+                        handleAdminMenu(sc);
+                    }
                     option = 0;
                     break;
                 default:
@@ -82,15 +83,15 @@ public class LibraryManagment {
         closeWriter();
     }
 
-    private void closeWriter() {
-        try {
-            if (writer != null) {
-                writer.close();
+        private void closeWriter() {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Erro ao fechar o FileWriter: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao fechar o FileWriter: " + e.getMessage());
         }
-    }
 
     private void handleStandardUserMenu(Scanner sc) {
         Print printStandard = new Print();
@@ -135,6 +136,9 @@ public class LibraryManagment {
                     foundedBook = getBookByTitle(title);
                     returnBook(foundedBook);
                     break;
+                case 9:
+                    currentUserProfile = null;
+                    return;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
                     break;
@@ -194,7 +198,7 @@ public class LibraryManagment {
                     lendBook(foundedBook);
                     break;
                 case 7:
-                    if (currentUserProfile == STANDARD) {
+                    if (currentUserProfile == UserProfile.STANDARD) {
                         System.out.print("Digite o título do livro: ");
                         title = sc.nextLine();
                         foundedBook = getBookByTitle(title);
@@ -206,11 +210,18 @@ public class LibraryManagment {
                 case 8:
                     addUser();
                     break;
+                case 9:
+                    currentUserProfile = null;
+                    System.out.println("Usuário desconectado. Retornando ao menu principal...");
+                    Print printUserOptions = new Print();
+                    printUserOptions.printUserOptions();
+                    return;
                 default:
                     System.out.println("Opção inválida. Tente novamente!");
                     break;
             }
         } while (optionAdmin != 0);
+
     }
 
     private Boolean login() {
@@ -225,34 +236,34 @@ public class LibraryManagment {
 
             UserProfile existingUser = users.stream().filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password)).findFirst().orElse(null);
 
-            if(existingUser != null) {
-                currentUserProfile = existingUser.getProfile();
+            if (existingUser != null) {
+                currentUserProfile = existingUser;
                 return true;
             }
 
             attempts++;
 
-            if(MAX_ATTEMPTS - attempts > 0) {
-                System.out.printf("Usuário e/ou senha incorretos. Você possui %d tentativas!%n", MAX_ATTEMPTS - attempts);
+            if (MAX_ATTEMPTS - attempts > 0) {
+                System.out.printf("Parâmetros de login inconsistentes com nossa base de dados. Tente novamente. Você tem mais %d tentativas!%n", MAX_ATTEMPTS - attempts);
+                break;
             }
 
         } while (attempts < MAX_ATTEMPTS);
 
-        sc.close();
         System.out.println("Quantidade de tentativas excedidas. O login não foi bem sucedido!");
         return false;
     }
 
-    private void getAllBooks() {
-        if (books.isEmpty()) {
-            System.out.println("Não existem livros cadastrados!");
-        } else {
-            System.out.println("Livros cadastrados: ");
-            for (Book book : books) {
-                System.out.println(book.getTitle());
+        private void getAllBooks() {
+            if (books.isEmpty()) {
+                System.out.println("Não existem livros cadastrados!");
+            } else {
+                System.out.println("Livros cadastrados: ");
+                for (Book book : books) {
+                    System.out.println(book.getTitle());
+                }
             }
         }
-    }
 
     private void addUser() {
         System.out.print("Digite o nome do usuário: ");
@@ -288,127 +299,118 @@ public class LibraryManagment {
             }
         } while (userPassword.length() < 8);
 
-        Print printUserOptions = new Print();
-        printUserOptions.printUserOptions();
-
+        UserProfile profile;
         int profileOption;
         try {
+            System.out.println("Escolha o perfil do usuário:");
+            System.out.println("1 - Admin");
+            System.out.println("2 - Standard");
             profileOption = Integer.parseInt(sc.nextLine());
+            profile = (profileOption == 1) ? UserProfile.ADMIN : UserProfile.STANDARD;
         } catch (NumberFormatException e) {
             System.out.println("Opção inválida. O usuário será criado como padrão.");
-            profileOption = 2;
+            profile = UserProfile.STANDARD;
         }
 
-        UserProfile profile;
-        switch (profileOption) {
-            case 1:
-                profile = ADMIN;
-                break;
-            case 2:
-            default:
-                profile = STANDARD;
-                break;
-        }
         users.add(new UserProfile(userName, userEmail, userPassword, profile));
-        return;
+
     }
 
     private void addBook(Book book) {
-        boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
-        if (existingBook) {
-            System.out.printf("Livro '%s' já existe cadastrado na biblioteca.%n", book.getTitle());
-        } else {
+            boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
+            if (existingBook) {
+                System.out.printf("Livro '%s' já existe cadastrado na biblioteca.%n", book.getTitle());
+            } else {
+                try {
+                    books.add(book);
+                    writer.write(book.toString() + System.lineSeparator());
+                    writer.flush();
+                    System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
+                } catch (IOException e) {
+                    System.out.println("Ocorreu um erro ao adicionar o livro no arquivo: " + e.getMessage());
+                }
+            }
+        }
+
+        private void removeBookByTitle(String bookName) {
             try {
-                books.add(book);
-                writer.write(book.toString() + System.lineSeparator());
+                Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().orElse(null);
+                if (foundedBook != null) {
+                    books.remove(foundedBook);
+                    updateBooksFile();
+                    System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+                } else {
+                    System.out.println("Livro não encontrado na biblioteca.");
+                }
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao remover o livro: " + e.getMessage());
+            }
+        }
+
+        private void updateBooksFile() {
+            try {
+                writer = new FileWriter("books.txt");
+                for (Book book : books) {
+                    writer.write(book.toString() + System.lineSeparator());
+                }
                 writer.flush();
-                System.out.printf("Livro '%s' adicionado com sucesso!%n", book.getTitle());
+                writer.close();
             } catch (IOException e) {
-                System.out.println("Ocorreu um erro ao adicionar o livro no arquivo: " + e.getMessage());
+                System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
             }
         }
-    }
 
-    private void removeBookByTitle(String bookName) {
-        try {
-            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().orElse(null);
-            if (foundedBook != null) {
-                books.remove(foundedBook);
-                updateBooksFile();
-                System.out.printf("Livro '%s' removido com sucesso!%n", foundedBook.getTitle());
+        private Book getBookByTitle(String bookName) {
+            try {
+                Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
+                String available = foundedBook.getAvailable() ? "Disponível" : "Indisponível";
+                System.out.printf("Título: %s - Autor: %s - Status: %s%n", foundedBook.getTitle(), foundedBook.getAuthor(), available);
+                return foundedBook;
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao localizar o livro: " + e.getMessage());
+            }
+            return null;
+        }
+
+        private List<Book> getBooksByAuthor(String author) {
+            List<Book> authorBooks = books.stream()
+                    .filter(book -> book.getAuthor().equals(author))
+                    .collect(Collectors.toList());
+
+            if (authorBooks.isEmpty()) {
+                System.out.println("Não foram encontrados livros para o autor: " + author);
             } else {
-                System.out.println("Livro não encontrado na biblioteca.");
+                System.out.printf("Livros encontrados para o autor %s:%n", author);
+                for (Book book : authorBooks) {
+                    System.out.printf("Título: %s - Autor: %s%n", book.getTitle(), book.getAuthor());
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao remover o livro: " + e.getMessage());
+            return authorBooks;
         }
-    }
 
-    private void updateBooksFile() {
-        try {
-            writer = new FileWriter("books.txt");
-            for (Book book : books) {
-                writer.write(book.toString() + System.lineSeparator());
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
-        }
-    }
-
-    private Book getBookByTitle(String bookName) {
-        try {
-            Book foundedBook = books.stream().filter(book -> book.getTitle().equals(bookName)).findFirst().get();
-            String available = foundedBook.getAvailable() ? "Disponível" : "Indisponível";
-            System.out.printf("Título: %s - Autor: %s - Status: %s%n", foundedBook.getTitle(), foundedBook.getAuthor(), available);
-            return foundedBook;
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao localizar o livro: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private List<Book> getBooksByAuthor(String author) {
-        List<Book> authorBooks = books.stream()
-                .filter(book -> book.getAuthor().equals(author))
-                .collect(Collectors.toList());
-
-        if (authorBooks.isEmpty()) {
-            System.out.println("Não foram encontrados livros para o autor: " + author);
-        } else {
-            System.out.printf("Livros encontrados para o autor %s:%n", author);
-            for (Book book : authorBooks) {
-                System.out.printf("Título: %s - Autor: %s%n", book.getTitle(), book.getAuthor());
+        private void lendBook(Book book) {
+            try {
+                if (book.getAvailable()) {
+                    book.setAvailable(false);
+                    System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
+                } else {
+                    System.out.printf("Livro '%s' não está disponível para empréstimo!%n", book.getTitle());
+                }
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
             }
         }
-        return authorBooks;
-    }
 
-    private void lendBook(Book book) {
-        try {
-            if (book.getAvailable()) {
-                book.setAvailable(false);
-                System.out.printf("Livro '%s' emprestado com sucesso!%n", book.getTitle());
-            } else {
-                System.out.printf("Livro '%s' não está disponível para empréstimo!%n", book.getTitle());
+        private void returnBook(Book book) {
+            try {
+                if (!(book.getAvailable())) {
+                    book.setAvailable(true);
+                    System.out.printf("Livro '%s' devolvido com sucesso!%n", book.getTitle());
+                } else {
+                    System.out.printf("Livro '%s' já consta disponível para empréstimo!%n", book.getTitle());
+                }
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro ao devolver o livro: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao emprestar o livro: " + e.getMessage());
         }
     }
-
-    private void returnBook(Book book) {
-        try {
-            if (!(book.getAvailable())) {
-                book.setAvailable(true);
-                System.out.printf("Livro '%s' devolvido com sucesso!%n", book.getTitle());
-            } else {
-                System.out.printf("Livro '%s' já consta disponível para empréstimo!%n", book.getTitle());
-            }
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro ao devolver o livro: " + e.getMessage());
-        }
-    }
-
-}
