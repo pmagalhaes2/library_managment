@@ -22,7 +22,7 @@ public class UserProfile {
         this.userType = userType;
     }
 
-     public String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -36,18 +36,5 @@ public class UserProfile {
 
     public UserType getUserType() {
         return userType;
-    }
-
-    public static void main(String[] args) {
-        UserProfile adminProfile = new UserProfile("Admin", "admin@example.com", "admin123", UserProfile.UserType.ADMIN);
-        String username = adminProfile.getUsername();
-        String password = adminProfile.getPassword();
-        String email = adminProfile.getEmail();
-        UserProfile.UserType userType = adminProfile.getUserType();
-
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-        System.out.println("Email: " + email);
-        System.out.println("User Type: " + userType);
     }
 }

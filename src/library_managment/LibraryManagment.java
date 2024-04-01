@@ -29,7 +29,7 @@ public class LibraryManagment {
     }
 
     public void init() {
-        Print printUserOptions = new Print();
+        Print printLoginOptions = new Print();
 
         books.add(new Book(UUID.randomUUID(), "Vidas Secas", "Graciliano Ramos"));
         books.add(new Book(UUID.randomUUID(), "Dom Casmurro", "Machado de Assis"));
@@ -48,7 +48,7 @@ public class LibraryManagment {
         int option = -1;
 
         while (option != 0) {
-            printUserOptions.printLoginOptions();
+            printLoginOptions.printLoginOptions();
 
             try {
                 option = Integer.parseInt(sc.nextLine());
@@ -223,7 +223,6 @@ public class LibraryManagment {
                     break;
             }
         } while (optionAdmin != 0);
-
     }
 
     private Boolean login() {
@@ -294,9 +293,6 @@ public class LibraryManagment {
             }
         } while (!PasswordValidation.isValidPassword(userPassword));
 
-
-
-
         UserProfile.UserType profile;
         int profileOption;
         try {
@@ -309,7 +305,6 @@ public class LibraryManagment {
         }
 
         users.add(new UserProfile(userName, userEmail, userPassword, profile));
-
     }
 
     private void addBook(Book book) {
