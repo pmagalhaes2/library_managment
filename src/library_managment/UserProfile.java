@@ -3,22 +3,23 @@ package library_managment;
 import java.util.UUID;
 
 public class UserProfile {
-    public static final UserProfile ADMIN = new UserProfile("Admin", "admin@example.com", "admin123", UserProfile.ADMIN);
-    public static final UserProfile STANDARD = new UserProfile("User", "user@example.com", "user123", UserProfile.STANDARD);
-
     private UUID id;
     private String name;
     private String email;
     private String password;
-    private UserProfile userType;
+    private UserType userType;
 
-    private UserProfile() {}
-    UserProfile(String name, String email, String password, UserProfile userType) {
+    public enum UserType {
+        ADMIN,
+        STANDARD
+    }
+
+    public UserProfile(String name, String email, String password, UserType userType) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.password = password;
-        this.userType = UserProfile.STANDARD;
+        this.userType = userType;
     }
 
      public String getPassword() {
@@ -33,19 +34,20 @@ public class UserProfile {
         return email;
     }
 
-    public UserProfile getUserType() {
+    public UserType getUserType() {
         return userType;
     }
 
     public static void main(String[] args) {
-        UserProfile adminProfile = UserProfile.ADMIN;
+        UserProfile adminProfile = new UserProfile("Admin", "admin@example.com", "admin123", UserProfile.UserType.ADMIN);
         String username = adminProfile.getUsername();
         String password = adminProfile.getPassword();
         String email = adminProfile.getEmail();
-        UserProfile userType = adminProfile.getUserType();
+        UserProfile.UserType userType = adminProfile.getUserType();
+
         System.out.println("Username: " + username);
         System.out.println("Password: " + password);
         System.out.println("Email: " + email);
-        System.out.println("User Type: " + userType.getUsername());
+        System.out.println("User Type: " + userType);
     }
 }
