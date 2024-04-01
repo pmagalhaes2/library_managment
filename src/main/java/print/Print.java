@@ -1,4 +1,4 @@
-package library_managment;
+package main.java.print;
 
 public class Print {
 

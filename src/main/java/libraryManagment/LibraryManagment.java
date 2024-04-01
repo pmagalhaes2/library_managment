@@ -1,7 +1,10 @@
-package library_managment;
+package main.java.libraryManagment;
 
-import library_managment.utils.EmailValidation;
-import library_managment.utils.PasswordValidation;
+import main.java.book.Book;
+import main.java.print.Print;
+import main.java.userProfile.UserProfile;
+import main.java.utils.email.EmailValidation;
+import main.java.utils.password.PasswordValidation;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -285,7 +288,7 @@ public class LibraryManagment {
 
         String userPassword;
         do {
-            System.out.print("IA senha deve conter pelo menos 1 letra maiúscula, 1 letra minúscula, 1 caractere especial e ter no mínimo 8 caracteres:   ");
+            System.out.print("A senha deve conter pelo menos 8 caracteres, sendo: 1 letra maiúscula, 1 letra minúscula, 1 caractere especial, 1 número:   ");
             userPassword = sc.nextLine();
 
             if (!PasswordValidation.isValidPassword(userPassword)) {

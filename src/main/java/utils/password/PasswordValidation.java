@@ -1,4 +1,4 @@
-package library_managment.utils;
+package main.java.utils.password;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
