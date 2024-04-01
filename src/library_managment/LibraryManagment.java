@@ -252,6 +252,32 @@ public class LibraryManagment {
         return false;
     }
 
+    private boolean isValidEmail(String email) {
+        // Verifica se o email contém um "@" e pelo menos um "." depois do "@"
+        return email.contains("@") && email.indexOf(".") > email.indexOf("@");
+    }
+
+    private boolean isValidPassword(String password) {
+        boolean hasUpperCase = false;
+        boolean hasLowerCase = false;
+        boolean hasDigit = false;
+        boolean hasSpecialChar = false;
+
+        for (char ch : password.toCharArray()) {
+            if (Character.isUpperCase(ch)) {
+                hasUpperCase = true;
+            } else if (Character.isLowerCase(ch)) {
+                hasLowerCase = true;
+            } else if (Character.isDigit(ch)) {
+                hasDigit = true;
+            } else if ("@#$%^&+=.".indexOf(ch) != -1) {
+                hasSpecialChar = true;
+            }
+        }
+
+        return password.length() >= 8 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+    }
+
     private void addUser() {
         System.out.print("Insira o nome do usuário: ");
         String userName = sc.nextLine();
@@ -261,6 +287,11 @@ public class LibraryManagment {
         do {
             System.out.print("Insira o email do usuário: ");
             userEmail = sc.nextLine();
+
+            if (!isValidEmail(userEmail)) {
+                System.out.println("Email inválido. Por favor, insira um email válido.");
+                userEmail = null; // Redefine o userEmail para forçar a repetição do loop
+            }
 
             boolean emailExists = false;
             for (UserProfile user : users) {
@@ -279,12 +310,12 @@ public class LibraryManagment {
 
         String userPassword;
         do {
-            System.out.print("Insira a senha do usuário (mínimo de 8 caracteres): ");
+            System.out.print("A senha deve conter pelo menos 1 letra maiúscula, 1 letra minúscula, 1 caractere especial e ter no mínimo 8 caracteres: ");
             userPassword = sc.nextLine();
-            if (userPassword.length() < 8) {
-                System.out.println("A senha deve ter no mínimo 8 caracteres. Por favor, tente novamente.");
+            if (!isValidPassword(userPassword)) {
+                System.out.println("A senha não atende aos critérios mínimos de segurança.");
             }
-        } while (userPassword.length() < 8);
+        } while (!isValidPassword(userPassword));
 
         UserProfile.UserType profile;
         int profileOption;

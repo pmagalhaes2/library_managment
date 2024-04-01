@@ -1,3 +1,0 @@
-a70c6621-2e95-45b7-a076-8ae0598cf608,Vidas Secas,Graciliano Ramos,true
-09c859ef-fb3e-4b1b-83ec-a816f0380996,Dom Casmurro,Machado de Assis,true
-1522b624-ed61-4103-b91c-d165e0aee464,Dom Quixote,Miguel de Cervantes,true
