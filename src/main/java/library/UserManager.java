@@ -23,11 +23,11 @@ public class UserManager {
         String userEmail;
 
         do {
-            System.out.print("Insira o email do usuário: ");
+            System.out.print("Insira o e-mail do usuário: ");
             userEmail = sc.nextLine();
 
             if (!EmailValidation.isValidEmail(userEmail)) {
-                System.out.println("Email inválido. Por favor, insira um email válido.");
+                System.out.println("E-mail inválido. Por favor, insira um e-mail válido.");
                 userEmail = null;
             }
 
@@ -39,7 +39,7 @@ public class UserManager {
                 }
             }
             if (emailExists) {
-                System.out.println("Este email já está sendo usado. Por favor, insira um email diferente.");
+                System.out.println("E-mail já cadastrado. Por favor, insira um e-mail diferente.");
                 userEmail = null;
             }
 
@@ -47,11 +47,11 @@ public class UserManager {
 
         String userPassword;
         do {
-            System.out.print("A senha deve conter pelo menos 8 caracteres, sendo: 1 letra maiúscula, 1 letra minúscula, 1 caractere especial, 1 número: ");
+            System.out.print("Insira a senha do usuário: ");
             userPassword = sc.nextLine();
 
             if (!PasswordValidation.isValidPassword(userPassword)) {
-                System.out.println("A senha não atende aos critérios mínimos de segurança.");
+                System.out.print("A senha deve conter pelo menos 8 caracteres, sendo: 1 letra maiúscula, 1 letra minúscula, 1 caractere especial, 1 número: ");
             }
         } while (!PasswordValidation.isValidPassword(userPassword));
 
