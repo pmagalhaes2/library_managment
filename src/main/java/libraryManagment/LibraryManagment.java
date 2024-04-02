@@ -24,6 +24,8 @@ public class LibraryManagment {
     public UserProfile.UserType currentUserProfile;
     public FileWriter writer;
 
+    public FileWriter userwriter;
+
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -81,7 +83,7 @@ public class LibraryManagment {
         closeWriter();
     }
 
-    private void closeWriter() {
+   private void closeWriter() {
         try {
             if (writer != null) {
                 writer.close();
@@ -307,8 +309,13 @@ public class LibraryManagment {
             profile = UserProfile.UserType.STANDARD;
         }
 
-        users.add(new UserProfile(userName, userEmail, userPassword, profile));
+        UserProfile newUser = new UserProfile(userName, userEmail, userPassword, profile);
+
+        users.add(newUser);
+
+        updateUserFile();
     }
+
 
     private void addBook(Book book) {
         boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
@@ -348,9 +355,20 @@ public class LibraryManagment {
                 writer.write(book.toString() + System.lineSeparator());
             }
             writer.flush();
-            writer.close();
         } catch (IOException e) {
             System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
+        }
+    }
+
+    private void updateUserFile() {
+        try {
+            userwriter = new FileWriter("users.txt");
+            for (UserProfile user : users) {
+                userwriter.write(user + System.lineSeparator());
+            }
+            userwriter.flush();
+        } catch (IOException e) {
+            System.err.println("Erro ao atualizar o arquivo users.txt: " + e.getMessage());
         }
     }
 
