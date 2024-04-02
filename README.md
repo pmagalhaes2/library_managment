@@ -21,7 +21,7 @@ This program offers functionalities for business administration and client manag
 
 - User Types:
   - Administrators have access to additional functionalities such as managing books and users.
-  - Standard users have limited functionalities and can mainly search for books, borrow, and 
+  - Standard users have limited functionalities and can mainly search for books, borrow, and return them.
 
 - Managing Books:
   - Administrators can add books to the library by providing the title and author.
