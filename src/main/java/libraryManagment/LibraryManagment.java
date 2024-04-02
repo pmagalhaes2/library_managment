@@ -402,7 +402,7 @@ public class LibraryManagment {
         } else {
             System.out.println("Livros cadastrados: ");
             for (Book book : books) {
-                System.out.println(book.getTitle() + " - " + book.getAuthor() + " - " + (book.getAvailable() ? "Disponível para empréstimo" : "Não disponível para empréstimo"));
+                System.out.println(book.getTitle() + " - " + book.getAuthor() + " - " + (book.getAvailable() ? "Disponível para empréstimo" : "Indisponível para empréstimo"));
 
             }
         }
