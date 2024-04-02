@@ -26,9 +26,6 @@ public class UserProfile {
         return password;
     }
 
-    public String getUsername() {
-        return name;
-    }
 
     public String getEmail() {
         return email;
@@ -37,4 +34,10 @@ public class UserProfile {
     public UserType getUserType() {
         return userType;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s,%s", id, name, email, password, userType);
+    }
+
 }

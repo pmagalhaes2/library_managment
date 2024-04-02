@@ -24,6 +24,8 @@ public class LibraryManagment {
     public UserProfile.UserType currentUserProfile;
     public FileWriter writer;
 
+    public FileWriter userwriter;
+
     Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -81,7 +83,7 @@ public class LibraryManagment {
         closeWriter();
     }
 
-    private void closeWriter() {
+   private void closeWriter() {
         try {
             if (writer != null) {
                 writer.close();
@@ -204,14 +206,10 @@ public class LibraryManagment {
                     lendBook(foundedBook);
                     break;
                 case 7:
-                    if (currentUserProfile == UserProfile.UserType.STANDARD) {
-                        System.out.print("Insira o título do livro: ");
-                        title = sc.nextLine();
-                        foundedBook = getBookByTitle(title);
-                        returnBook(foundedBook);
-                    } else {
-                        System.out.println("Opção não disponível para usuários padrão.");
-                    }
+                    System.out.print("Insira o título do livro: ");
+                    title = sc.nextLine();
+                    foundedBook = getBookByTitle(title);
+                    returnBook(foundedBook);
                     break;
                 case 8:
                     addUser();
@@ -307,8 +305,13 @@ public class LibraryManagment {
             profile = UserProfile.UserType.STANDARD;
         }
 
-        users.add(new UserProfile(userName, userEmail, userPassword, profile));
+        UserProfile newUser = new UserProfile(userName, userEmail, userPassword, profile);
+
+        users.add(newUser);
+
+        updateUserFile();
     }
+
 
     private void addBook(Book book) {
         boolean existingBook = books.stream().anyMatch(registeredBook -> registeredBook.getTitle().equals(book.getTitle()));
@@ -348,9 +351,20 @@ public class LibraryManagment {
                 writer.write(book.toString() + System.lineSeparator());
             }
             writer.flush();
-            writer.close();
         } catch (IOException e) {
             System.err.println("Erro ao atualizar o arquivo books.txt: " + e.getMessage());
+        }
+    }
+
+    private void updateUserFile() {
+        try {
+            userwriter = new FileWriter("users.txt");
+            for (UserProfile user : users) {
+                userwriter.write(user + System.lineSeparator());
+            }
+            userwriter.flush();
+        } catch (IOException e) {
+            System.err.println("Erro ao atualizar o arquivo users.txt: " + e.getMessage());
         }
     }
 
@@ -388,7 +402,8 @@ public class LibraryManagment {
         } else {
             System.out.println("Livros cadastrados: ");
             for (Book book : books) {
-                System.out.println(book.getTitle());
+                System.out.println(book.getTitle() + " - " + book.getAuthor() + " - " + (book.getAvailable() ? "Disponível para empréstimo" : "Não disponível para empréstimo"));
+
             }
         }
     }
