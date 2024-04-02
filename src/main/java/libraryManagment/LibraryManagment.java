@@ -206,14 +206,10 @@ public class LibraryManagment {
                     lendBook(foundedBook);
                     break;
                 case 7:
-                    if (currentUserProfile == UserProfile.UserType.STANDARD) {
-                        System.out.print("Insira o título do livro: ");
-                        title = sc.nextLine();
-                        foundedBook = getBookByTitle(title);
-                        returnBook(foundedBook);
-                    } else {
-                        System.out.println("Opção não disponível para usuários padrão.");
-                    }
+                    System.out.print("Insira o título do livro: ");
+                    title = sc.nextLine();
+                    foundedBook = getBookByTitle(title);
+                    returnBook(foundedBook);
                     break;
                 case 8:
                     addUser();
