@@ -25,7 +25,6 @@ public class Print {
         System.out.println("| Opção 5 - Buscar livro pelo Autor    |");
         System.out.println("| Opção 6 - Emprestar livro            |");
         System.out.println("| Opção 7 - Devolver livro             |");
-        System.out.println("| Opção 8 - Retornar ao menu principal |");
         System.out.println("| Opção 0 - Encerrar programa          |");
         System.out.println("+ -------------------------------------+");
 
